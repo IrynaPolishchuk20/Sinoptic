@@ -1,1 +1,7 @@
-/*# sourceMappingURL=style.css.map */
+input, button{
+    margin: 10px;
+}
+
+ul{
+    list-style-type: none;
+}
