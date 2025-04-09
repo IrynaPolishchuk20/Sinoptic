@@ -12,8 +12,23 @@ header {
   align-items: center;
   justify-content: center;
 }
+header h1 {
+  text-align: center;
+}
 header input, header button {
   margin: 10px;
+}
+header #locationBtn {
+  border: 1px solid green;
+  background: none;
+  color: green;
+  height: 40px;
+  border-radius: 5px;
+  width: 200px;
+}
+header #locationBtn:hover {
+  background: green;
+  color: #fff;
 }
 
 #weatherNaw {
@@ -34,4 +49,10 @@ header input, header button {
 #weatherNaw #infoWeather img {
   width: 150px;
   height: 150px;
+}
+
+#info5Day table, td {
+  border: 1px solid rgb(203, 203, 203);
+  border-radius: 3px;
+  background-color: rgb(146, 214, 246);
 }/*# sourceMappingURL=main.css.map */
