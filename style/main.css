@@ -1,0 +1,37 @@
+body {
+  background-color: rgb(228, 244, 247);
+  display: flex;
+  align-content: stretch;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+header input, header button {
+  margin: 10px;
+}
+
+#weatherNaw {
+  list-style-type: none;
+}
+#weatherNaw #infoWeather {
+  border: 1px solid rgb(203, 203, 203);
+  border-radius: 3px;
+  background-color: rgb(146, 214, 246);
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-content: stretch;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#weatherNaw #infoWeather img {
+  width: 150px;
+  height: 150px;
+}/*# sourceMappingURL=main.css.map */

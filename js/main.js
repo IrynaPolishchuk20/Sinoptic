@@ -36,16 +36,18 @@ function showInfo(data) {
     const ul = document.getElementById('weatherNaw')
     ul.innerHTML = ''
     const elements =`
-        <li><strong>Дата і час:</strong> ${dt_txt}</li>
-        <li><strong>Температура:</strong> ${temp}°C</li>
-        <li><strong>Відчувається як:</strong> ${feels_like}°C</li>
-        <li><img src=${img}></li>
-        <li><strong>Мін:</strong> ${temp_min}°C, <strong>Макс:</strong> ${temp_max}°C</li>
-        <li><strong>Вологість:</strong> ${humidity}%</li>
-        <li><strong>Тиск:</strong> ${pressure} hPa</li>
-        <li><strong>Видимість:</strong> ${visibility} м</li>
-        <li><strong>Вітер:</strong> ${speed} м/с, <strong>Пориви:</strong> ${gust || '—'} м/с, <strong>Напрям:</strong> ${deg}°</li>
-        <li><strong>Рівень моря:</strong> ${sea_level} hPa</li>
+        <div id="infoWeather">
+            <li><img src=${img}></li>   
+            <li><strong>Дата і час:</strong> ${dt_txt}</li>
+            <li><strong>Температура:</strong> ${temp.toFixed(0)}°C</li>
+            <li><strong>Відчувається як:</strong> ${feels_like.toFixed(0)}°C</li>
+            <li><strong>Вологість:</strong> ${humidity}%</li>
+            <li><strong>Тиск:</strong> ${pressure} hPa</li>
+            <li><strong>Видимість:</strong> ${visibility} м</li>
+            <li><strong>Вітер:</strong> ${speed} м/с, <strong> Пориви:</strong> ${gust || '—'} м/с, <strong> Напрям:</strong> ${deg}°</li>
+            <li><strong>Опис:</strong> ${description}</li>
+
+        </div> 
     `
     ul.innerHTML = elements
 }
