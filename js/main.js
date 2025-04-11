@@ -19,7 +19,6 @@ async function fetchData(url) {
         }
         console.log(data);
         showInfo(data)
-        // show5days(data)
         showInfo5days(data)
 
     } catch (error) {
@@ -35,54 +34,32 @@ function showInfo(data) {
     const {deg, gust, speed} = wind
     const img = `https://openweathermap.org/img/wn/${icon}@2x.png`
     const ul = document.getElementById('weatherNaw')
+
+    const date = new Date(dt_txt)
+    const dayName = date.toLocaleString('uk-UA', {weekday: 'long'})
+    const formattedDate = date.toLocaleString('uk-UA', {day: '2-digit', month: 'numeric'})
+    const tempMin = temp_min.toFixed(0)
+    const tempMax = temp_max.toFixed(0)
+
+
     ul.innerHTML = ''
     const elements =`
         <div id="infoWeather">
+            <li><strong> ${dayName}</strong></li>
+            <li><strong>${formattedDate}</strong></li>
             <li><img src=${img}></li>   
-            <li><strong>Дата і час:</strong> ${dt_txt}</li>
             <li><strong>Температура:</strong> ${temp.toFixed(0)}°C</li>
-            <li><strong>Мінімальна температура:</strong> ${temp.toFixed(0)}°C</li>
-            <li><strong>Максимальна температува:</strong> ${temp.toFixed(0)}°C</li>
+            <li><strong>Мінімальна температура:</strong> ${tempMin}°C</li>
+            <li><strong>Максимальна температува:</strong> ${tempMax}°C</li>
             <li><strong>Відчувається як:</strong> ${feels_like.toFixed(0)}°C</li>
             <li><strong>Вологість:</strong> ${humidity}%</li>
             <li><strong>Тиск:</strong> ${pressure} hPa</li>
-            <li><strong>Видимість:</strong> ${visibility} м</li>
-            <li><strong>Вітер:</strong> ${speed} м/с, <strong> Пориви:</strong> ${gust || '—'} м/с, <strong> Напрям:</strong> ${deg}°</li>
-            <li><strong>Опис:</strong> ${description}</li>
+            <li><strong>Вітер:</strong> ${speed} м/с, <strong> Пориви:</strong> ${gust || '—'} м/с</li>
+            <li><strong>${description}</strong> </li>
         </div> 
     `
     ul.innerHTML = elements
 }
-
-// function show5days(data) {
-//     const table = document.getElementById('weather5Days')
-//     table.innerHTML = ''
-//     data.list.forEach(el => {
-//     const {dt_txt, main, visibility, weather, wind} = el
-//     const {feels_like, grnd_level, humidity, pressure, sea_level,temp, temp_kf, temp_max, temp_min} = main
-//     const {description, icon} = weather[0]
-//     const {deg, gust, speed} = wind
-//     const img = `https://openweathermap.org/img/wn/${icon}@2x.png`
-//     const elements =`
-//             <div id="infoWeather">
-//             <td><img src=${img}></td>   
-//             <td><strong>Дата і час:</strong> ${dt_txt}</td>
-//             <td><strong>Температура:</strong> ${temp.toFixed(0)}°C</td>
-//             <td><strong>Мінімальна температура:</strong> ${temp.toFixed(0)}°C</td>
-//             <td><strong>Максимальна температува:</strong> ${temp.toFixed(0)}°C</td>
-//             <td><strong>Відчувається як:</strong> ${feels_like.toFixed(0)}°C</td>
-//             <td><strong>Вологість:</strong> ${humidity}%</td>
-//             <td><strong>Тиск:</strong> ${pressure} hPa</td>
-//             <td><strong>Видимість:</strong> ${visibility} м</td>
-//             <td><strong>Вітер:</strong> ${speed} м/с, <strong> Пориви:</strong> ${gust || '—'} м/с, <strong> Напрям:</strong> ${deg}°</td>
-//             <td><strong>Опис:</strong> ${description}</td>
-//         </div> 
-//     `
-//     const tr = document.createElement('tr')
-//     tr.innerHTML = elements
-//     table.appendChild(tr)
-//     });
-// }
 
 function showInfo5days(data) {
     const table = document.getElementById('weather5Days')
@@ -111,15 +88,22 @@ function showInfo5days(data) {
         })
 
         for(const data in dailyData){
+
             const day = dailyData[data]
             const img = `https://openweathermap.org/img/wn/${day.icon}@2x.png`
+
+            const date = new Date(`${data}T12:00:00`)
+            const dayName = date.toLocaleString('uk-UA', {weekday: 'long'})
+            const formattedDate = date.toLocaleString('uk-UA', {day: '2-digit', month: 'numeric'})
+
             const row = `
             <div id="info5Day">
-                <td><img src=${img}></td>
-                <td><strong>Дата</strong> ${data.split('-')[2]}</td>
-                <td><strong>Мінімальна температура:</strong> ${day.min}°C</td>
-                <td><strong>Максимальна температува:</strong> ${day.max}°C</td>
-                <td><strong>Опис:</strong> ${day.description}</td>
+                <p><strong> ${dayName}</strong></з>   
+                <p><strong>${formattedDate}</strong></з>  
+                <p><img src=${img}></p>
+                <p><strong>Дата</strong> ${data.split('-')[2]}</p
+                <p><strong>Температура:</strong> ${day.min}°C – ${day.max}°C</p>
+                <p><strong>${day.description}</strong> </p>
             </div>
             `
             table.innerHTML += row
@@ -127,6 +111,7 @@ function showInfo5days(data) {
 }
 
 document.getElementById('locationBtn').addEventListener('click', weatherByLocation)
+
 function weatherByLocation() {
     if ('geolocation' in navigator){
     navigator.geolocation.getCurrentPosition(position => {
