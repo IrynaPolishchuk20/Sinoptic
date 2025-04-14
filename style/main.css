@@ -27,14 +27,14 @@ header input, header button {
   margin: 10px;
 }
 header #locationBtn, header #search {
-  border: 1px solid rgb(18, 162, 210);
+  border: 1px solid rgb(9, 116, 152);
   background: none;
-  color: rgb(18, 162, 210);
+  color: rgb(9, 116, 152);
   height: 40px;
   border-radius: 5px;
 }
 header #locationBtn:hover, header #search:hover {
-  background: rgb(18, 162, 210);
+  background: rgb(9, 116, 152);
   color: #fff;
 }
 
