@@ -18,7 +18,6 @@ async function fetchData(url) {
             return
         }
         console.log(data);
-        showInfo(data)
         showInfo5days(data)
 
     } catch (error) {
@@ -26,88 +25,121 @@ async function fetchData(url) {
     }
 }
 
-function showInfo(data) {
-    const all = data.list[0]
-    const {dt_txt, main, visibility, weather, wind} = all
-    const {feels_like, grnd_level, humidity, pressure, sea_level,temp, temp_kf, temp_max, temp_min} = main
-    const {description, icon} = weather[0]
-    const {deg, gust, speed} = wind
-    const img = `https://openweathermap.org/img/wn/${icon}@2x.png`
-    const ul = document.getElementById('weatherNaw')
-
-    const date = new Date(dt_txt)
-    const dayName = date.toLocaleString('uk-UA', {weekday: 'long'})
-    const formattedDate = date.toLocaleString('uk-UA', {day: '2-digit', month: 'numeric'})
-    const tempMin = temp_min.toFixed(0)
-    const tempMax = temp_max.toFixed(0)
-
-
-    ul.innerHTML = ''
-    const elements =`
-        <div id="infoWeather">
-            <li><strong> ${dayName}</strong></li>
-            <li><strong>${formattedDate}</strong></li>
-            <li><img src=${img}></li>   
-            <li><strong>Температура:</strong> ${temp.toFixed(0)}°C</li>
-            <li><strong>Мінімальна температура:</strong> ${tempMin}°C</li>
-            <li><strong>Максимальна температува:</strong> ${tempMax}°C</li>
-            <li><strong>Відчувається як:</strong> ${feels_like.toFixed(0)}°C</li>
-            <li><strong>Вологість:</strong> ${humidity}%</li>
-            <li><strong>Тиск:</strong> ${pressure} hPa</li>
-            <li><strong>Вітер:</strong> ${speed} м/с, <strong> Пориви:</strong> ${gust || '—'} м/с</li>
-            <li><strong>${description}</strong> </li>
-        </div> 
-    `
-    ul.innerHTML = elements
-}
 
 function showInfo5days(data) {
     const table = document.getElementById('weather5Days')
     table.innerHTML = ''
 
-    const dailyData ={}
+    const dailyData = {}
 
     data.list.forEach(el => {
-        const data = el.dt_txt.split(' ')[0]
-        const tempMin = (el.main.temp_min).toFixed(0)
-        const tempMax = (el.main.temp_max).toFixed(0)
+        const dateKey = el.dt_txt.split(' ')[0]
+        const tempMin = Number(el.main.temp_min.toFixed(0))
+        const tempMax = Number(el.main.temp_max.toFixed(0))
 
-        if(!dailyData[data]){
-            dailyData[data]={
+        if (!dailyData[dateKey]) {
+            dailyData[dateKey] = {
                 min: tempMin,
                 max: tempMax,
                 icon: el.weather[0].icon,
                 description: el.weather[0].description
             }
-        }else{
-                dailyData[data].min = (dailyData[data], tempMin)
-                dailyData[data].max = (dailyData[data], tempMax)
-
-            }
-        
-        })
-
-        for(const data in dailyData){
-
-            const day = dailyData[data]
-            const img = `https://openweathermap.org/img/wn/${day.icon}@2x.png`
-
-            const date = new Date(`${data}T12:00:00`)
-            const dayName = date.toLocaleString('uk-UA', {weekday: 'long'})
-            const formattedDate = date.toLocaleString('uk-UA', {day: '2-digit', month: 'numeric'})
-
-            const row = `
-            <div id="info5Day">
-                <p><strong> ${dayName}</strong></з>   
-                <p><strong>${formattedDate}</strong></з>  
-                <p><img src=${img}></p>
-                <p><strong>Дата</strong> ${data.split('-')[2]}</p
-                <p><strong>Температура:</strong> ${day.min}°C – ${day.max}°C</p>
-                <p><strong>${day.description}</strong> </p>
-            </div>
-            `
-            table.innerHTML += row
+        } else {
+            dailyData[dateKey].min = Math.min(dailyData[dateKey].min, tempMin)
+            dailyData[dateKey].max = Math.max(dailyData[dateKey].max, tempMax)
         }
+    })
+
+    for (const dateKey in dailyData) {
+        const day = dailyData[dateKey]
+
+        // const img = `https://openweathermap.org/img/wn/${day.icon}@2x.png`
+        const img = getCustomIconById(day.icon)
+
+
+        const date = new Date(`${dateKey}T12:00:00`)
+        const dayName = date.toLocaleString('uk-UA', {weekday: 'long'})
+        const formattedDate = date.toLocaleString('uk-UA', {day: '2-digit', month: 'numeric'})
+
+        const row = `
+            <div class="day" data-date="${dateKey}">
+                <p><strong>${dayName}</strong></p>
+                <p><strong>${formattedDate}</strong></p>
+                <p><img src="${img}" alt="${day.description}"></p>
+                <p><strong>${day.description}</strong></p>
+                <p>🌡 ${day.min}°C – ${day.max}°C</p>
+            </div>
+        `
+        table.innerHTML += row
+    }
+
+    document.querySelectorAll('.day').forEach(dayEl => {
+        dayEl.addEventListener('click', () => {
+            document.querySelectorAll('.day').forEach(el => el.classList.remove('selected-day'))
+            dayEl.classList.add('selected-day')
+            const selectedDate = dayEl.getAttribute('data-date')
+            console.log('Натиснуто на дату:', selectedDate)
+            showInfo3Hours(data, selectedDate)
+        })
+    })
+}
+
+function showInfo3Hours(data, selectedDate) {
+    const container = document.getElementById('weather3Hours')
+    container.innerHTML = ''
+
+    const filtered = data.list.filter(item => item.dt_txt.startsWith(selectedDate))
+
+    filtered.forEach(item => {
+        const date = new Date(item.dt_txt)
+        const time = date.toLocaleTimeString('uk-UA', {hour: '2-digit', minute: '2-digit'})
+
+        const { temp, temp_min, temp_max, feels_like, humidity } = item.main
+        const { icon, description } = item.weather[0]
+        const { speed } = item.wind
+
+        //const img = `https://openweathermap.org/img/wn/${icon}@2x.png`
+        const img = getCustomIconById(icon)
+
+        const block = `
+            <div class="weatherBlock">
+                <p><strong>${time}</strong></p>
+                <img src="${img}" alt="${description}">
+                <p><strong>${description}</strong></p>
+                <p>🌡 ${temp.toFixed(0)}°C</p>
+                <p>⬇ Мін: ${temp_min.toFixed(0)}°C <br> ⬆ Макс: ${temp_max.toFixed(0)}°C</p>
+                <p>🤔 Відчувається як: ${feels_like.toFixed(0)}°C</p>
+                <p>💧 ${humidity}%</p>
+                <p>💨 ${speed} м/с</p>
+            </div>
+        `
+        container.innerHTML += block
+    })
+}
+
+function getCustomIconById(iconCode) {
+    const map = {
+        '01d': 'img/sun.png',
+        '01n': 'img/sun.png',
+        '02d': 'img/cloudy.png',
+        '02n': 'img/cloudy.png',
+        '03d': 'img/cloudy.png',
+        '03n': 'img/cloudy.png',
+        '04d': 'img/cloudy.png',
+        '04n': 'img/cloudy.png',
+        '09d': 'img/rain.png',
+        '09n': 'img/rain.png',
+        '10d': 'img/rain.png',
+        '10n': 'img/rain.png',
+        '11d': 'img/thunderstorm.png',
+        '11n': 'img/thunderstorm.png',
+        '13d': 'img/snow.png',
+        '13n': 'img/snow.png',
+        '50d': 'img/mist.png',
+        '50n': 'img/mist.png',
+    }
+
+    return map[iconCode] || `https://openweathermap.org/img/wn/${iconCode}@2x.png`
 }
 
 document.getElementById('locationBtn').addEventListener('click', weatherByLocation)
