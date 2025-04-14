@@ -111,7 +111,6 @@ function showInfo3Hours(data, selectedDate) {
                 <img src="${img}" alt="${description}">
                 <p><strong>${description}</strong></p>
                 <p>🌡 ${temp.toFixed(0)}°C</p>
-                <p>⬇ Мін: ${temp_min.toFixed(0)}°C <br> ⬆ Макс: ${temp_max.toFixed(0)}°C</p>
                 <p>🤔 Відчувається як: ${feels_like.toFixed(0)}°C</p>
                 <p>💧 ${humidity}%</p>
                 <p>💨 ${speed} м/с</p>

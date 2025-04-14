@@ -63,6 +63,7 @@ header #locationBtn:hover, header #search:hover {
 #weather5Days .selected-day {
   border: 3px solid rgb(9, 116, 152);
   box-shadow: 0 0 8px rgba(51, 153, 255, 0.4);
+  scale: 1.17;
 }
 
 .weatherBlock {
