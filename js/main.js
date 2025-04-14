@@ -30,6 +30,10 @@ function showInfo5days(data) {
     const table = document.getElementById('weather5Days')
     table.innerHTML = ''
 
+    const city = data.city.name
+    const cityHeader = document.querySelector('header h1')
+    cityHeader.textContent = `Погода у місті ${city}`
+
     const dailyData = {}
 
     data.list.forEach(el => {
@@ -57,7 +61,7 @@ function showInfo5days(data) {
         const img = getCustomIconById(day.icon)
 
 
-        const date = new Date(`${dateKey}T12:00:00`)
+        const date = new Date(`${dateKey}`)
         const dayName = date.toLocaleString('uk-UA', {weekday: 'long'})
         const formattedDate = date.toLocaleString('uk-UA', {day: '2-digit', month: 'numeric'})
 

@@ -8,6 +8,10 @@ body {
   justify-content: center;
   flex-direction: column;
 }
+body img {
+  width: 75px;
+  height: 75px;
+}
 
 header {
   background: #e2eff0;
@@ -71,9 +75,4 @@ header #locationBtn:hover, header #search:hover {
   width: 160px;
   text-align: center;
   background: #e2eff0;
-}
-
-img {
-  width: 75px;
-  height: 75px;
 }/*# sourceMappingURL=main.css.map */
