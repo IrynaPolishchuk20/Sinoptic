@@ -5,7 +5,7 @@ search.addEventListener('click', () => {fetchData(generateURL())})
 
 function generateURL() {
     const cityName =  document.querySelector('input').value
-    const mainURL = `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&lang=ua&appid=9c85e50b4fadb5b89a848e81555b62dc`
+    const mainURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&lang=ua&appid=9c85e50b4fadb5b89a848e81555b62dc`
     return mainURL
 }
 
@@ -14,13 +14,16 @@ async function fetchData(url) {
         const response = await fetch(url)
         const data = await response.json()
         if(data.cod === '404'){
+            showError(`Місто не знайдено або введено некоректно 😕`)
             console.log(data.message);
             return
         }
         console.log(data);
+        document.getElementById('errorMessage').innerHTML = ''
         showInfo5days(data)
 
     } catch (error) {
+        showError(`Сталася помилка. Спробуйте пізніше.`)
         console.error(error);
     }
 }
@@ -143,6 +146,11 @@ function getCustomIconById(iconCode) {
     }
 
     return map[iconCode] || `https://openweathermap.org/img/wn/${iconCode}@2x.png`
+}
+
+function showError(message) {
+    const errorMessage = document.getElementById('errorMessage')
+    errorMessage.innerHTML = `<p style="color:red; font-weight:bold; background: #e2eff0; border-radius: 12px; height: 50px; width: 400px; display: flex; justify-content: center; align-items: center; margin: 0 auto;">${message}</p>`
 }
 
 document.getElementById('locationBtn').addEventListener('click', weatherByLocation)
